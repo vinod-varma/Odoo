@@ -27,4 +27,4 @@ RUN mkdir /etc/odoo/addons && mkdir /etc/odoo/enterprise && chown -R odoo:odoo /
 RUN mkdir -p /var/lib/odoo/sessions \
     && chown -R odoo:odoo /var/lib/odoo/sessions
 
-USER odoo
+# USER odoo
