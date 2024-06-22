@@ -22,19 +22,6 @@ RUN pip3 install prometheus_client pysftp
 RUN pip install redis openai cssselect click-odoo click-odoo-contrib
 
 COPY config/odoo.config /etc/odoo/
-RUN mkdir /etc/odoo/addons && mkdir /etc/odoo/enterprise
-
-# Set executable permissions and ownership for entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-
-RUN chmod +x /entrypoint.sh \
-    && chown odoo:odoo /entrypoint.sh \
-    && chown -R odoo:odoo /etc/odoo
+RUN mkdir /etc/odoo/addons && mkdir /etc/odoo/enterprise && chown -R odoo:odoo /etc/odoo
 
 USER odoo
-
-# Set the entrypoint command
-ENTRYPOINT ["/entrypoint.sh"]
-
-# Default command to run Odoo
-CMD ["odoo"]
