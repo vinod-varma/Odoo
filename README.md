@@ -16,7 +16,6 @@ mkdir -p /mnt/volume-bergjes/odoo_enterprise_production
 
 mkdir -p /mnt/volume-bergjes/db_data_production
 
-mkdir -p /mnt/volume-bergjes/dragonfly_data_production
 
 `docker-compose up --build -d`
 
