@@ -21,7 +21,7 @@ RUN pip3 install sentry-sdk oauthlib requests_oauthlib raven cerberus aiohttp we
 RUN pip3 install prometheus_client pysftp
 RUN pip install redis openai cssselect click-odoo click-odoo-contrib
 
-COPY config/odoo.conf /etc/odoo/
+COPY config/odoo.config /etc/odoo/
 RUN mkdir /etc/odoo/addons && mkdir /etc/odoo/enterprise
 
 # Set executable permissions and ownership for entrypoint script
