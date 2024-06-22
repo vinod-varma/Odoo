@@ -52,18 +52,6 @@ services:
     volumes:
       - /mnt/volume-bergjes/db_data_production:/var/lib/postgres/data
 
-  dragonfly:
-    image: "docker.dragonflydb.io/dragonflydb/dragonfly"
-    container_name: production-odoo-dragonfly
-    shm_size: 1GB
-    restart: unless-stopped
-    ulimits:
-      memlock: -1
-    command:
-      - "--requirepass=fabio"
-    volumes:
-      - /mnt/volume-bergjes/dragonfly_data_production:/data
-
 volumes:
   odoo-data:
     name: odoo_data_production
