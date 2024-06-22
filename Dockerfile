@@ -24,4 +24,7 @@ RUN pip install redis openai cssselect click-odoo click-odoo-contrib
 COPY config/odoo.config /etc/odoo/
 RUN mkdir /etc/odoo/addons && mkdir /etc/odoo/enterprise && chown -R odoo:odoo /etc/odoo
 
+RUN mkdir -p /var/lib/odoo/sessions \
+    && chown -R odoo:odoo /var/lib/odoo/sessions
+
 USER odoo
