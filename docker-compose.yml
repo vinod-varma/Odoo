@@ -1,0 +1,77 @@
+version: '3.7'
+
+services:
+  odoo:
+    image: odoo-codeagency:15.0
+    build: .
+    container_name: production-odoo-app
+    user: odoo:odoo
+    environment:
+      - HOST=db
+      - PORT=5432
+      - USER=${SERVICE_USER_POSTGRES}
+      - PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8069"]
+      interval: 2s
+      timeout: 10s
+      retries: 30
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8069:8069"
+      - "8070:8070"
+      - "8072:8072"
+    volumes:
+      - /mnt/volume-bergjes/odoo_data_production:/var/lib/odoo
+      - /mnt/volume-bergjes/odoo_backups_production:/backups
+      - /mnt/volume-bergjes/odoo_import:/import
+      - /mnt/volume-bergjes/odoo_logs_production:/logs
+      - /mnt/volume-bergjes/odoo_custom_addons_production:/etc/odoo/addons
+      - /mnt/volume-bergjes/odoo_enterprise_production:/etc/odoo/enterprise
+  db:
+    image: postgres:14
+    container_name: production-odoo-db
+    hostname: db
+    restart: unless-stopped
+    shm_size: 1GB
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${SERVICE_USER_POSTGRES}
+      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgres/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d postgres"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+    volumes:
+      - /mnt/volume-bergjes/db_data_production:/var/lib/postgres/data
+
+  dragonfly:
+    image: "docker.dragonflydb.io/dragonflydb/dragonfly"
+    container_name: production-odoo-dragonfly
+    shm_size: 1GB
+    restart: unless-stopped
+    ulimits:
+      memlock: -1
+    command:
+      - "--requirepass=fabio"
+    volumes:
+      - /mnt/volume-bergjes/dragonfly_data_production:/data
+
+volumes:
+  odoo-data:
+    name: odoo_data_production
+  odoo_backups:
+  odoo_import:
+  odoo_logs:
+  odoo_custom_addons:
+  db-data:
+    name: db_data_production
+  dragonfly-data:
+    name: dragonfly_data_production
